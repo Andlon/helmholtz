@@ -1,4 +1,4 @@
-function [A, b] = stiffness2D(k, tri, g0, source_index)
+function [A, b] = stiffness2D(k, vertices, triangles, g0, source_index)
 % helmholtz.STIFFNESS TODO: Add documentation
 
 assert(size(vertices, 2) == 2, 'vertices must be an Nx2 matrix.');
@@ -10,9 +10,8 @@ N = size(vertices, 1);
 A = sparse(N, N);
 b = zeros(N, 1);
 
-% Setting the source_index equal to g0 in the load vector,
-% the rest is zero
-b(source_index) = g0;
+
+sum_of_integrals = 0;
 
 % Compute contributions by each element
 for t = 1:T
@@ -43,8 +42,33 @@ for t = 1:T
     
     
     A(indices, indices) = A(indices, indices) + A_k;
+    
+    
+    % Finds the index of the source_index in indices
+       s_i = find(indices == source_index);
+
+    % Calculates the preliminary load vector
+    if s_i
+        % Defining the basis of the source node
+        source_basis = basis(:,s_i);
+        
+        % Adding to the sum of integrals term
+        source_integrand = @(X) X*source_basis(2:3) + source_basis(1);
+        sum_of_integrals = sum_of_integrals + integration.quadrature2D(P,4,source_integrand);
+        
+        for i = 1:3
+            integrand = @(X) -(X*source_basis(2:3) + source_basis(1)).*(X * basis(2:3, i) + basis(1, i));
+            b_k(i) = integration.quadrature2D(P,4,integrand);
+        end
+    end
     b(indices) = b(indices) + b_k;
+    
 end
 
+% Calculates the gh elements from the integral requirement
+gh = g0/sum_of_integrals;
+
+% Calulate load vector
+b = gh*b;
 
 end
