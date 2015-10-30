@@ -14,7 +14,7 @@ assert(xmin < xmax, 'xmin must be smaller than xmax');
 assert(ymin < ymax, 'ymin must be smaller than ymax');
 
 x_spec = linspace(xmin, xmax, Nx);
-y_spec = linspace(xmin, xmax, Ny);
+y_spec = linspace(ymin, ymax, Ny);
 [X, Y] = meshgrid(x_spec, y_spec);
 x = reshape(X, Nx^2, 1);
 y = reshape(Y, Ny^2, 1);
