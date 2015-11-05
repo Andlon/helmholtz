@@ -3,7 +3,7 @@ function S = find_encroached( tri )
 S = zeros(0, 1);
 edges = tri.edges();
 
-for k = size(edges, 1)
+for k = 1:size(edges, 1)
     % Denote a and b as the indices of the vertices in this edge
     i = edges(k, 1);
     j = edges(k, 2);
@@ -25,7 +25,7 @@ for k = size(edges, 1)
     
     % Compute distance from center to each vertex
     D = bsxfun(@minus, vertices, center);
-    distances = sum(D.^2, 2);
+    distances = sqrt(sum(D.^2, 2));
     
     % If any point is within the diametral circle of the edge,
     % it is considered encroached
