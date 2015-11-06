@@ -8,7 +8,9 @@ T = size(triangles, 1);
 N = size(vertices, 1);
 
 A = sparse(N, N);
-b = zeros(N, 1);
+
+% b(:,1) is real part, b(:,2) is complex part
+b = zeros(N, 2);
 
 
 sum_of_integrals = 0;
@@ -24,6 +26,9 @@ for t = 1:T
     basis = helmholtz.basis_coefficients(P);
     grad = basis(2:3, :);
     
+    
+    % TODO: Make basis functions for real and imaginary part using real and
+    % imaginary part of k^2
     A_k = area * transpose(grad) * grad;
     for i = 1:3
         for j = 1:3
@@ -35,14 +40,14 @@ for t = 1:T
         end
     end
     
-    % Assume g = 0 for now, which implies b = 0.
     % TODO: Take a function rhs(...) that computes the
     % local b_k for the current triangle instead of just a function g
-    b_k = zeros(3, 1);
+    b_k = zeros(3, 2);
     
     
     A(indices, indices) = A(indices, indices) + A_k;
     
+    % Dirac Mass Source
     
     % Finds the index of the source_index in indices
        s_i = find(indices == source_index);
@@ -54,14 +59,15 @@ for t = 1:T
         
         % Adding to the sum of integrals term
         source_integrand = @(X) X*source_basis(2:3) + source_basis(1);
-        sum_of_integrals = sum_of_integrals + integration.quadrature2D(P,4,source_integrand);
+        sum_of_integrals = sum_of_integrals + integration.quadrature2D(P,4,source_integrand );
         
         for i = 1:3
             integrand = @(X) -(X*source_basis(2:3) + source_basis(1)).*(X * basis(2:3, i) + basis(1, i));
-            b_k(i) = integration.quadrature2D(P,4,integrand);
+            b_k(i,1) = integration.quadrature2D(P,4,integrand);
+            b_k(i,2) = integration.quadrature2D(P,4,integrand);
         end
     end
-    b(indices) = b(indices) + b_k;
+    b(indices,:) = b(indices,:) + b_k;
     
 end
 
@@ -69,6 +75,7 @@ end
 gh = g0/sum_of_integrals;
 
 % Calulate load vector
-b = gh*b;
+b(:,1) = gh(1)*b(:,1);
+b(:,2) = gh(2)*b(:,2);
 
 end
