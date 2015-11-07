@@ -10,13 +10,14 @@ for t = 1:T
     vertex_indices = tri.ConnectivityList(t, :);
     vertices = tri.Points(vertex_indices, :);
     sides = vertices - circshift(vertices, 1);
-    diameter = max(sum(sides.^2, 2));
+    diameter = max(sqrt(sum(sides.^2, 2)));
     
     % Is this the correct computation of the ratio we're looking for?
     % TODO: Find out
     ratio = diameter / d_inscribed(t);
     
-    if ratio > 3 || diameter > h
+    % What's an appropriate threshold for ratio?
+    if ratio > 8 || diameter > h
        Q(end+1) = t;
     end
 end
