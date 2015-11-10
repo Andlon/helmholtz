@@ -9,7 +9,7 @@ classdef domain < handle
         % represents a matrix containing the points of a polygon,
         % each row representing a point that is connected with an edge
         % to the point in the previous row, and the first point has an edge
-        % to the last point. 
+        % to the last point.
         polygons = cell(0, 1);
         
         materials;
@@ -42,17 +42,17 @@ classdef domain < handle
             obj.polygons{end+1} = points;
             
             if isempty(obj.materials)
-               obj.materials = material; 
+                obj.materials = material;
             else
                 obj.materials(end+1) = material;
             end
         end
         
-        function [tri, M] = triangulate(obj)
+        function [tri, M] = triangulate(obj, varargin)
             poly = obj.polygons;
             
             % Add the domain itself as a polygon constraint
-            poly{end+1} = [ 
+            poly{end+1} = [
                 obj.x0, obj.y0;
                 obj.x0, obj.y1;
                 obj.x1, obj.y1;
@@ -61,6 +61,15 @@ classdef domain < handle
             
             [P, C] = geometry.polygon_constraints(poly);
             tri = delaunayTriangulation(P, C);
+            
+            if nargin == 2
+                h = varargin{1};
+                assert(h > 0);
+                tri = geometry.refine_triangulation(tri, h);
+            elseif nargin > 2
+                error('Too many inputs');
+            end
+            
             M = geometry.assign_materials(tri, obj.polygons, ...
                 obj.materials, obj.default_material);
         end
