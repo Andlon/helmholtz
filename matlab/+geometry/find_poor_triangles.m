@@ -23,7 +23,7 @@ for t = searchspace
     ratio = diameter / d_inscribed(t);
     
     % What's an appropriate threshold for ratio?
-    if ratio > 8 || diameter > h
+    if ratio > 5 || diameter > h
        Q(end+1, :) = vertex_indices;
     end
 end
