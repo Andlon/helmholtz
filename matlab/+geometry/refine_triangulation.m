@@ -7,20 +7,20 @@ S = geometry.find_encroached(tri);
 while ~isempty(Q) || ~isempty(S)
     prev_connectivity = tri.ConnectivityList;
     while ~isempty(S)
-        constraint = S(1, :);
-        % Add midpoint of encroached constraint to triangulation
-        tri = geometry.split_constraint(tri, constraint);
+        for s = 1:size(S, 1)
+            constraint = S(s, :);
+            % Add midpoint of encroached constraint to triangulation
+            tri = geometry.split_constraint(tri, constraint);
+        end
+        
         S = geometry.find_encroached(tri);
     end
     
     if ~isempty(Q)
-        % Find index q of triangle Q(end, :). Note that calculating the
-        % circumcenter directly through a formula is probably much faster.
-        % Fix this later. For now, we just want this to work.
         [triangle_is_valid, q] = ismember(Q(end, :), tri.ConnectivityList, 'rows');
         Q(end, :) = [];
         
-        if triangle_is_valid    
+        if triangle_is_valid
             center = tri.circumcenter(transpose(q));
             is_encroached = encroaches(tri, center, tri.Constraints);
             S = [ S; tri.Constraints(is_encroached, :) ];
