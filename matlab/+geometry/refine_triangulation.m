@@ -22,14 +22,8 @@ while ~isempty(Q) || ~isempty(S)
         
         if triangle_is_valid    
             center = tri.circumcenter(transpose(q));
-            
-            % Determine if the circumcenter encroaches any of the constraints
-            for e = 1:size(tri.Constraints, 1)
-                constraint = tri.Constraints(e, :);
-                if encroaches(tri, center, constraint)
-                    S(end+1, :) = constraint;
-                end
-            end
+            is_encroached = encroaches(tri, center, tri.Constraints);
+            S = [ S; tri.Constraints(is_encroached, :) ];
             
             if isempty(S)
                 % Add circumcenter to triangulation
@@ -44,14 +38,14 @@ end
 
 end
 
-function result = encroaches(tri, vertex, edge)
-a = tri.Points(edge(1), :);
-b = tri.Points(edge(2), :);
+function result = encroaches(tri, vertex, constraints)
+a = tri.Points(constraints(:, 1), :);
+b = tri.Points(constraints(:, 2), :);
 center = a + (b - a) / 2;
-radius = norm(b - center);
+radius_squared = sum((b - center).^2, 2);
 
-d = vertex - center;
-result = radius > norm(d);
+d = bsxfun(@minus, vertex, center);
+result = radius_squared > sum(d.^2, 2);
 end
 
 function [ indices ] = changed_triangles(tri, prev_connectivity)
