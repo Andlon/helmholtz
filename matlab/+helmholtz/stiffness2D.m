@@ -1,13 +1,17 @@
-function [A, b] = stiffness2D(k, vertices, triangles, g0, source_index)
+function [A_real, A_im, b] = stiffness2D(tri,materials, g0, source_index)
 % helmholtz.STIFFNESS TODO: Add documentation
 
-assert(size(vertices, 2) == 2, 'vertices must be an Nx2 matrix.');
-assert(size(triangles, 2) == 3, 'triangles must be a Kx3 matrix.');
+%assert(size(vertices, 2) == 2, 'vertices must be an Nx2 matrix.');
+%assert(size(triangles, 2) == 3, 'triangles must be a Kx3 matrix.');
+
+vertices = tri.Points;
+triangles = tri.ConnectivityList;
 
 T = size(triangles, 1);
 N = size(vertices, 1);
 
-A = sparse(N, N);
+A_real = sparse(N, N);
+A_im = sparse(N,N);
 
 % b(:,1) is real part, b(:,2) is complex part
 b = zeros(N, 2);
@@ -17,6 +21,7 @@ sum_of_integrals = 0;
 
 % Compute contributions by each element
 for t = 1:T
+    k = materials(t).wavenumber;
     indices = triangles(t, :);
     P = vertices(indices, :);
     area = integration.element_jacobian(P) / 2;
@@ -29,14 +34,20 @@ for t = 1:T
     
     % TODO: Make basis functions for real and imaginary part using real and
     % imaginary part of k^2
-    A_k = area * transpose(grad) * grad;
+    A_k_real = area * transpose(grad) * grad;
+    A_k_im = area * transpose(grad) * grad;
     for i = 1:3
         for j = 1:3
-            integrand = @(X) ...
-                - k^2 * ...
+            integrand_real = @(X) ...
+                - real(k^2) * ...
                 (X * basis(2:3, i) + basis(1, i)) .* ...
                 (X * basis(2:3, j) + basis(1, j));
-            A_k(i, j) = A_k(i, j) + integration.quadrature2D(P, 4, integrand);
+            integrand_im = @(X) ...
+                - 0 * ...
+                (X * basis(2:3, i) + basis(1, i)) .* ...
+                (X * basis(2:3, j) + basis(1, j));
+            A_k_real(i, j) = A_k_real(i, j) + integration.quadrature2D(P, 4, integrand_real);
+            A_k_im(i, j) = A_k_im(i, j) + integration.quadrature2D(P, 4, integrand_im);
         end
     end
     
@@ -45,7 +56,8 @@ for t = 1:T
     b_k = zeros(3, 2);
     
     
-    A(indices, indices) = A(indices, indices) + A_k;
+    A_real(indices, indices) = A_real(indices, indices) + A_k_real;
+    A_im(indices, indices) = A_im(indices, indices) + A_k_im;
     
     % Dirac Mass Source
     
