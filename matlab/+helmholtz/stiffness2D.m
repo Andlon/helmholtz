@@ -1,5 +1,8 @@
-function [A, b] = stiffness2D(k, vertices, triangles, g0, source_index)
+function [A, b] = stiffness2D(tri,M, g0, source_index)
 % helmholtz.STIFFNESS TODO: Add documentation
+
+vertices = tri.Points;
+triangles = tri.ConnectivityList;
 
 assert(size(vertices, 2) == 2, 'vertices must be an Nx2 matrix.');
 assert(size(triangles, 2) == 3, 'triangles must be a Kx3 matrix.');
@@ -10,13 +13,14 @@ N = size(vertices, 1);
 A = sparse(N, N);
 
 % b(:,1) is real part, b(:,2) is complex part
-b = zeros(N, 2);
+b = zeros(N, 1);
 
 
 sum_of_integrals = 0;
 
 % Compute contributions by each element
 for t = 1:T
+    k = M(t).wavenumber;
     indices = triangles(t, :);
     P = vertices(indices, :);
     area = integration.element_jacobian(P) / 2;
@@ -42,7 +46,7 @@ for t = 1:T
     
     % TODO: Take a function rhs(...) that computes the
     % local b_k for the current triangle instead of just a function g
-    b_k = zeros(3, 2);
+    b_k = zeros(3, 1);
     
     
     A(indices, indices) = A(indices, indices) + A_k;
@@ -63,11 +67,10 @@ for t = 1:T
         
         for i = 1:3
             integrand = @(X) -(X*source_basis(2:3) + source_basis(1)).*(X * basis(2:3, i) + basis(1, i));
-            b_k(i,1) = integration.quadrature2D(P,4,integrand);
-            b_k(i,2) = integration.quadrature2D(P,4,integrand);
+            b_k(i) = integration.quadrature2D(P,4,integrand);
         end
     end
-    b(indices,:) = b(indices,:) + b_k;
+    b(indices) = b(indices) + b_k;
     
 end
 
@@ -75,7 +78,6 @@ end
 gh = g0/sum_of_integrals;
 
 % Calulate load vector
-b(:,1) = gh(1)*b(:,1);
-b(:,2) = gh(2)*b(:,2);
+b = gh*b;
 
 end
