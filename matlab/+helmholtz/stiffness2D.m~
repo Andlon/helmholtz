@@ -71,18 +71,14 @@ for t = 1:T
                 b_k(i,s) = integration.quadrature2D(P,4,integrand);
             end
         end
-        b(indices,s) = b(indices,s) + b_k(:,s);
+        b(indices) = b(indices) + b_k;
     end
 end
 
 % Calculates the gh elements from the integral requirement
-for s = 1:length(g0)
-    gh(s) = g0(s)/sum_of_integrals(s);
-    % Calulate load vector
-    b(:,s) = gh(s)*b(:,s);
-end
+gh = g0/sum_of_integrals;
 
-% Add sources
-b = sum(b,2);
+% Calulate load vector
+b = gh*b;
 
 end
