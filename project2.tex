@@ -1,0 +1,88 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[latin1]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{bm}
+% Use \bm{x} for vectors/matrices in bold AND italic
+
+\newcommand{\vectornorm}[1]{\left\|#1\right\|}
+
+\begin{document}
+\title{Programming project in TMA4220 \\ Part 2B \\ Helmholtz' equation for electromagnetic waves}
+\author{Anders Maximilian Opskar Voldsund \\ Andreas Sebastian Borgen Longva \\ Espen August Johansen Velsvik}
+\maketitle
+
+
+\section*{Introduction}
+The Helmholtz equation,
+\begin{align}
+\delta \psi + k^2 \psi = g,
+\end{align}
+is a time-independent form of the wave equations which often arise in physical problems involving the computation of electromagnetic radiation. In the modeling of electromagnetic waves $\psi$ represents the Fourier transform of either the electric field $E$ or the magnetic field $H$. $k$ is called the wavenumber, and from the derivation of the Helmholtz' equation from Maxwell's equations in vacuum it is seen that $k = \frac{2\pi f}{c}$. Here $f$ is the frequency of the electromagnetic waves and $c = \frac{1}{\sqrt{\mu_0 \epsilon_0}}$ is the speed of light, where $\mu_0$ and $\epsilon_0$ are the permeability and permittivity in vacuum.
+
+\section*{The Weak Formulation}
+We consider the following Dirichlet problem:
+\begin{equation}
+\begin{aligned}
+\label{Helmholtz_Dir}
+\delta \psi + k^2 \psi &= g  \quad \text{in} \, \Omega \\
+\psi &= 0 \quad \text{on} \, \partial \Omega.
+\end{aligned}
+\end{equation}
+To derive a weak formulation the equation is multiplied with a suiting test function $v \in X $ and integrate over the domain $\Omega$. The left hand side gives:
+\begin{align*}
+\int_\Omega \nabla \psi &+ k^2 \psi v \, \mathrm{d} \Omega \\
+&\Downarrow \\
+\int_{\partial \Omega} \frac{\partial \psi}{\partial n} v \, \mathrm{d} \Omega + \int_\Omega & k^2 \psi v - \nabla \psi \nabla v \, \mathrm{d} \Omega.
+\end{align*}
+At this point we can make a choice for the space of $v$. We choose $v$ to lie in the following space:
+\begin{align*}
+X = H^1_0(\Omega) = \left\{ v \in H^1(\Omega) : v = 0 \text{ on }   \partial \Omega \right\},
+\end{align*}
+where
+\begin{align*}
+H^1(\Omega) = \left\{ v: \Omega \rightarrow \mathbb{R}: v \in L^2(\Omega), v' \in L^2(\Omega) \right\}.
+\end{align*}
+Since $v$ disappears on the boundary we are left with the following expression:
+\begin{align*}
+\int_\Omega & k^2 \psi v - \nabla \psi \nabla v \, \mathrm{d} \Omega = \int_\Omega gv \, \mathrm{d} \Omega.
+\end{align*}
+Let now $a(u,v)$ and $F(v)$ be defined as the following functionals:
+\begin{align*}
+a(u,v) &= \int_\Omega  \nabla u \nabla v - k^2 u v  \, \mathrm{d} \Omega  \quad \text{and} \\
+F(v) &= - \int_\Omega gv \, \mathrm{d} \Omega.
+\end{align*}
+This implies that $a(u,v) = F(v)$. The following problem is called the weak formulation of (\ref{Helmholtz_Dir}):
+\begin{equation}
+\begin{aligned}
+\label{Helmholtz_weak}
+\text{find} \, u \in H^1_0(\Omega): \quad a(u,v) = F(v) \quad \forall \, v \in H^1_0(\Omega).
+\end{aligned}
+\end{equation}
+The functional $a(u,v)$ is continuous. This is seen by the following:
+\begin{align*}
+|a(u,v)| &= |\int_\Omega  \nabla u \nabla v - k^2 u v \, \mathrm{d} \Omega| \\
+ 		& \leq |\int_\Omega \nabla u \nabla v \, \mathrm{d} \Omega| + k^2 |\int_\Omega u v \, \mathrm{d} \Omega| \\
+ 		& \leq \vectornorm{\nabla u}_{L^2(\Omega)} \vectornorm{\nabla v}_{L^2(\Omega)} + k^2 \vectornorm{u}_{L^2(\Omega)} \vectornorm{v}_{L^2(\Omega)} \\
+ 		& \leq C \vectornorm{u}_{L^2(\Omega)} \vectornorm{v}_{L^2(\Omega)} + k^2 \vectornorm{u}_{L^2(\Omega)} \vectornorm{v}_{L^2(\Omega)} \\
+ 		& \leq C \vectornorm{u}_{H^1(\Omega)} \vectornorm{v}_{H^1(\Omega)} + k^2 \vectornorm{u}_{H^1(\Omega)} \vectornorm{v}_{H^1(\Omega)} \\
+ 		& = M \vectornorm{u}_{H^1(\Omega)} \vectornorm{v}_{H^1(\Omega)}.
+\end{align*}
+The functional $a(u,v)$ is also coercive under certain conditions, since
+\begin{align*}
+a(u,u) &= \int_\Omega  \nabla u \nabla u - k^2 u u \, \mathrm{d} \Omega \\
+ 		& = \int_\Omega  |\nabla u|^2 \, \mathrm{d} \Omega - \int_{\Omega} k^2 |u|^2 \, \mathrm{d} \Omega \\
+ 		& =  \vectornorm{\nabla u}_{L^2(\Omega)}^2 - k^2 \vectornorm{u}_{L^2(\Omega)}^2\\
+ 		& \geq C\vectornorm{u}_{L^2(\Omega)}^2  - k^2 \vectornorm{u}_{L^2(\Omega)}^2\\
+\end{align*}
+\begin{thebibliography}{}
+
+\bibitem{Quarteroni}
+Alfio Quarteroni, \emph{Numerical Models for Differential Problems}, 2nd Edition, 2014.
+
+\end{thebibliography}
+
+\end{document}
+

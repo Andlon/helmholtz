@@ -39,9 +39,13 @@ classdef domain < handle
                 x1, y0;
                 ];
             
-            obj.polygons{end+1} = points;
-            
-            if isempty(obj.materials)
+            obj.add_polygon(material, points);
+        end
+        
+        function add_polygon(obj, material, points)
+           obj.polygons{end+1} = points;
+           
+           if isempty(obj.materials)
                 obj.materials = material;
             else
                 obj.materials(end+1) = material;

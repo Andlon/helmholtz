@@ -5,46 +5,50 @@ Q = geometry.find_poor_triangles(tri, h);
 S = geometry.find_encroached(tri);
 
 while ~isempty(Q) || ~isempty(S)
+    prev_connectivity = tri.ConnectivityList;
     while ~isempty(S)
-        constraint = S(1, :);
-        % Add midpoint of encroached constraint to triangulation
-        tri = geometry.split_constraint(tri, constraint);
+        for s = 1:size(S, 1)
+            constraint = S(s, :);
+            % Add midpoint of encroached constraint to triangulation
+            tri = geometry.split_constraint(tri, constraint);
+        end
+        
         S = geometry.find_encroached(tri);
     end
     
     if ~isempty(Q)
-        q = Q(1);
-        center = tri.circumcenter(q);
+        [triangle_is_valid, q] = ismember(Q(end, :), tri.ConnectivityList, 'rows');
+        Q(end, :) = [];
         
-        % Determine if the circumcenter encroaches any of the constraints
-        for e = 1:size(tri.Constraints, 1)
-            constraint = tri.Constraints(e, :);
-            if encroaches(tri, center, constraint)
-                S(end+1, :) = constraint;
+        if triangle_is_valid
+            center = tri.circumcenter(transpose(q));
+            is_encroached = encroaches(tri, center, tri.Constraints);
+            S = [ S; tri.Constraints(is_encroached, :) ];
+            
+            if isempty(S)
+                % Add circumcenter to triangulation
+                tri.Points(end+1, :) = center;
             end
-        end
-        
-        if isempty(S)
-            % Add circumcenter to triangulation
-            tri.Points(end+1, :) = center;
         end
     end
     
-    % Global update here.
-    % TODO: Can accelerate substantially by only considering
-    % changed triangles/segments
-    Q = geometry.find_poor_triangles(tri, h);
+    searchspace = changed_triangles(tri, prev_connectivity);
+    Q = union(Q, geometry.find_poor_triangles(tri, h, searchspace), 'rows');
 end
 
 end
 
-function result = encroaches(tri, vertex, edge)
-a = tri.Points(edge(1), :);
-b = tri.Points(edge(2), :);
+function result = encroaches(tri, vertex, constraints)
+a = tri.Points(constraints(:, 1), :);
+b = tri.Points(constraints(:, 2), :);
 center = a + (b - a) / 2;
-radius = norm(b - center);
+radius_squared = sum((b - center).^2, 2);
 
-d = vertex - center;
-result = radius > norm(d);
+d = bsxfun(@minus, vertex, center);
+result = radius_squared > sum(d.^2, 2);
+end
+
+function [ indices ] = changed_triangles(tri, prev_connectivity)
+[~, indices] = setdiff(tri.ConnectivityList, prev_connectivity, 'rows');
 end
 
