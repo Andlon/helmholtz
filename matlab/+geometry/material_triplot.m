@@ -6,12 +6,10 @@ distinct_colors = parula(num_distinct_values);
 colors = distribute_colors(values, distinct_colors);
 
 figure;
-hold on;
 for t = 1:size(tri, 1)
     vertices = tri.Points(tri.ConnectivityList(t, :), :);
     patch(vertices(:, 1), vertices(:, 2), colors(t, :));
 end
-hold off;
 
 end
 
