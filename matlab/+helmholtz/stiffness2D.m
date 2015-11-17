@@ -3,6 +3,7 @@ function [A, b] = stiffness2D(tri,M, g0, source_index)
 
 vertices = tri.Points;
 triangles = tri.ConnectivityList;
+edgelist = freeBoundary(tri);
 
 assert(size(vertices, 2) == 2, 'vertices must be an Nx2 matrix.');
 assert(size(triangles, 2) == 3, 'triangles must be a Kx3 matrix.');
@@ -44,8 +45,6 @@ for t = 1:T
         end
     end
     
-    % TODO: Take a function rhs(...) that computes the
-    % local b_k for the current triangle instead of just a function g
     b_k = zeros(3, length(g0));
     
     
@@ -73,6 +72,55 @@ for t = 1:T
         end
         b(indices,s) = b(indices,s) + b_k(:,s);
     end
+    
+    % Implementation of Babuska example
+    
+    if false
+        k1 = k*cos(t);
+        k2 = k*sin(t);
+        boundary_indices = find(sum((edgelist == indices(1)) + (edgelist == indices(2)) + (edgelist == indices(3)),2) == 2);
+        if ~isempty(boundary_indices)
+            for k = 1:numel(boundary_indices)
+                b_k = zeros(2, 1);
+                % The solution is valid for a certain boundary function
+                % on a specific domain (0,1)x(0,1)
+                edge = edgelist(boundary_indices(k));
+                p1 = vertices(edge(1));
+                p2 = vertices(edge(2));
+                if p1(1) == p2(1)
+                    if p1(1) == 0
+                        % We are on the boundary (0,0)x(0,1)
+                        g = @(x) i*(k-k1)*exp(i*k2*x(2));
+                    end
+                    if p1(1) == 1
+                        % We are on the boundary (1,1)x(0,1)
+                        g = @(x) i*(k+k1)*exp(i*(k1+k2*x(2)));
+                    end
+                elseif p1(2) == p2(2)
+                    if p1(2) == 0
+                        % We are on the boundary (0,0)x(0,1)
+                        g = @(x) i*(k-k2)*exp(i*k1*x(1));
+                    end
+                    if p(2) == 1
+                        % We are on the boundary (1,1)x(0,1)
+                        g = @(x) i*(k+k2)*exp(i*(k1*x(1)+k2));
+                    end
+                end
+
+                ind1 = find(indices==edge(1));
+                integrand1 = @(x) g(x)*(x * basis(2:3, ind1) + basis(1, ind1));
+                b_k(1) = integration.quadLine2D(p1, p2, 1, integrand1);
+
+                ind2 = find(indices==edge(2));
+                integrand2 = @(x) g(x)*(x * basis(2:3, ind2) + basis(1, ind2));
+                b_k(2) = integration.quadLine2D(p2, p1, 1, integrand2);
+                b(edge) = b(edge) + b_k;
+            end
+        end
+    end
+    
+    
+    
 end
 
 % Calculates the gh elements from the integral requirement
