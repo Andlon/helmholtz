@@ -40,8 +40,13 @@ classdef pdedomain < handle
             assert(x0 < x1, 'x0 must be smaller than x1');
             assert(y0 < y1, 'y0 must be smaller than y1');
             
-            rect_csg = obj.rectcsg(x0, y0, x1, y1);            
+            rect_csg = obj.rectcsg(x0, y0, x1, y1);
             obj.add_csg(material, rect_csg);
+        end
+        
+        function add_polygon(obj, material, P)
+            poly_csg = obj.polycsg(P);
+            obj.add_csg(material, poly_csg);
         end
         
         function [tri, M] = triangulate(obj, varargin)
@@ -72,6 +77,11 @@ classdef pdedomain < handle
         function dom = create_rectangular(default_material, x0, y0, x1, y1)
             rect_csg = geometry.pdedomain.rectcsg(x0, y0, x1, y1);
             dom = geometry.pdedomain(default_material, rect_csg);
+        end
+        
+        function dom = create_polygonal(default_material, P)
+            poly_csg = geometry.pdedomain.polycsg(P);
+            dom = geometry.pdedomain(default_material, poly_csg);
         end
     end
     
@@ -114,6 +124,17 @@ classdef pdedomain < handle
                 y1;
                 y1;
                 y0;
+                ];
+        end
+        
+        function csg = polycsg(P)
+            assert(size(P, 2) == 2, 'P must be an Nx2 matrix of polygon points.');
+            N = size(P, 1);
+            csg = [
+                2;
+                N;
+                P(:, 1);
+                P(:, 2);
                 ];
         end
     end
