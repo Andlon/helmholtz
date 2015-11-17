@@ -6,9 +6,9 @@ vertices = tri.Points;
 
 N = length(edgelist);
 
-for i = 1:N
-    p1_index = edgelist(i, 1);
-    p2_index = edgelist(i, 2);
+for k = 1:N
+    p1_index = edgelist(k, 1);
+    p2_index = edgelist(k, 2);
     p1 = vertices(p1_index, :)';
     p2 = vertices(p2_index, :)';
     
@@ -23,22 +23,26 @@ for i = 1:N
     end
     k = M(triangle_index).wavenumber;
     
-    P = [p1(1) p1(2); p2(1) p2(2)];
+    P = [p1' 1; p2' 1];
     V = eye(2);
     C = P \ V;
     
-    phi_1 = @(x) C(1, 1) * x(1) + C(2, 1) * x(2);
-    phi_2 = @(x) C(1, 2) * x(1) + C(2, 2) * x(2);
-    f = @(x) i * k * phi_1(x) * phi_2(x);
-    g = @(x) i * k * phi_1(x) * phi_1(x);
-    h = @(x) i * k * phi_2(x) * phi_2(x);
+    assert(sum(edgelist(:, 1) == p1_index) == 1);
+    assert(sum(edgelist(:, 2) == p2_index) == 1);
     
-    A(p1_index, p2_index) = A(p1_index, p2_index) + integration.quadLine2D(p1, p2, 1, f);
-    A(p2_index, p1_index) = A(p2_index, p1_index) + integration.quadLine2D(p2, p1, 1, f);
-    A(p1_index, p1_index) = A(p1_index, p1_index) + integration.quadLine2D(p1, p2, 1, g);
-    A(p2_index, p2_index) = A(p2_index, p2_index) + integration.quadLine2D(p1, p2, 1, h);
+    phi_1 = @(x) C(1, 1) * x(1) + C(2, 1) * x(2) + C(3, 1);
+    phi_2 = @(x) C(1, 2) * x(1) + C(2, 2) * x(2) + C(3, 2);
+    f = @(x) 1i * k * phi_1(x) * phi_2(x);
+    g = @(x) 1i * k * phi_1(x) * phi_1(x);
+    h = @(x) 1i * k * phi_2(x) * phi_2(x);
+   
+    A(p1_index, p2_index) = A(p1_index, p2_index) - integration.quadLine2D(p1, p2, 1, f);
+    A(p2_index, p1_index) = A(p2_index, p1_index) - integration.quadLine2D(p1, p2, 1, f);
+    A(p1_index, p1_index) = A(p1_index, p1_index) - integration.quadLine2D(p1, p2, 1, g);
+    A(p2_index, p2_index) = A(p2_index, p2_index) - integration.quadLine2D(p1, p2, 1, h);
     
 end
 
 u = A \ b;
+
 end
