@@ -4,7 +4,7 @@ classdef pdedomain < handle
         materials;
     end
     
-    methods       
+    methods
         function add_csg(obj, material, csg)
             if size(csg, 2) > 1
                 error('Only single-column csg supported.');
@@ -23,7 +23,7 @@ classdef pdedomain < handle
             end
             
             if isempty(obj.materials)
-               obj.materials = material; 
+                obj.materials = material;
             else
                 obj.materials(end+1) = material;
             end
@@ -40,6 +40,11 @@ classdef pdedomain < handle
         function add_polygon(obj, material, P)
             poly_csg = obj.polycsg(P);
             obj.add_csg(material, poly_csg);
+        end
+        
+        function add_circle(obj, material, center, radius)
+           circle_csg = obj.circlecsg(center, radius);
+           obj.add_csg(material, circle_csg);
         end
         
         function [tri, M] = triangulate(obj, varargin)
@@ -116,6 +121,18 @@ classdef pdedomain < handle
                 N;
                 P(:, 1);
                 P(:, 2);
+                ];
+        end
+        
+        function csg = circlecsg(center, radius)
+            assert(numel(center) == 2, 'center must be a 2-element vector.');
+            assert(isscalar(radius) && radius > 0, 'radius must be a postive scalar.');
+            center = reshape(center, 2, 1);
+            
+            csg = [
+                1;
+                center;
+                radius
                 ];
         end
     end
