@@ -1,4 +1,12 @@
 function u = robin2D( A, b, tri, M )
+    % robin2D   Yields a solution with the robin type boundary condition
+    %
+    % robin2D takes as input the stiffness matrix A, the load vector b, the
+    % a triangulation tri and the materials struct setting the material for
+    % each element. The function will alter the A-matrix as a consequence
+    % of the robin boundary by evaluating integrals at the boundary
+    % elements. The output of the function is the new u vector after the 
+    % boundary conditions has been enforced.
 
 triangles = tri.ConnectivityList;
 edgelist = freeBoundary(tri);
@@ -6,18 +14,15 @@ vertices = tri.Points;
 
 N = length(edgelist);
 
-for k = 1:N
-    p1_index = edgelist(k, 1);
-    p2_index = edgelist(k, 2);
+for j = 1:N
+    p1_index = edgelist(j, 1);
+    p2_index = edgelist(j, 2);
     p1 = vertices(p1_index, :)';
     p2 = vertices(p2_index, :)';
     
     % Find the index of the triangle the edge belongs to to determine the
     % k-value.
     triangle_index = find(sum((triangles == p1_index) + (triangles == p2_index),2) == 2);
-    
-    % If the edge is on the boundary we should only get the index of one
-    % triangle. Give error if not.
     if length(triangle_index) > 1
         error('Tried to set the wave number for several triangles instead of one.');
     end
