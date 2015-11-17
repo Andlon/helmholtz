@@ -1,21 +1,10 @@
 classdef pdedomain < handle
     properties(SetAccess = private)
-        geometry = [];
-        
+        geometry;
         materials;
     end
     
-    methods
-        function obj = pdedomain(default_material, csg)
-            gstat = csgchk(csg);
-            if any(gstat)
-                error('Error in CSG geometry. Consult csgchk docs.');
-            end
-            
-            obj.materials = default_material;
-            obj.geometry = csg;
-        end
-        
+    methods       
         function add_csg(obj, material, csg)
             if size(csg, 2) > 1
                 error('Only single-column csg supported.');
@@ -33,7 +22,11 @@ classdef pdedomain < handle
                 obj.geometry(1:num_csg_rows, end+1) = csg;
             end
             
-            obj.materials(end+1) = material;
+            if isempty(obj.materials)
+               obj.materials = material; 
+            else
+                obj.materials(end+1) = material;
+            end
         end
         
         function add_rectangle(obj, material, x0, y0, x1, y1)
@@ -70,18 +63,6 @@ classdef pdedomain < handle
             end
             
             tri = triangulation(T(1:3, :)', P');
-        end
-    end
-    
-    methods(Static)
-        function dom = create_rectangular(default_material, x0, y0, x1, y1)
-            rect_csg = geometry.pdedomain.rectcsg(x0, y0, x1, y1);
-            dom = geometry.pdedomain(default_material, rect_csg);
-        end
-        
-        function dom = create_polygonal(default_material, P)
-            poly_csg = geometry.pdedomain.polycsg(P);
-            dom = geometry.pdedomain(default_material, poly_csg);
         end
     end
     
