@@ -74,27 +74,12 @@ classdef pdedomain < handle
     methods(Static, Access = private)
         function map = map_regions_to_geometries(region_table)
             num_regions = size(region_table, 1);
-            num_geometries = size(region_table, 2);
-            map = zeros(num_regions, 1);
-            geometries = 1:num_geometries;
-            
-            % Create a mapping from regions to geometries such that
-            % each region maps to exactly one (unique) geometry.
-            % Order the regions by how many geometries they contain
-            % and starting with the "smallest regions", successively
-            % map geometries that are not mapped to any region to the
-            % current region.
-            region_counts = sum(region_table, 2);
-            [~, index_map] = sortrows(region_counts);
+            map = zeros(num_regions, 1);            
+
+            % Each region gets mapped to the last geometry that was added
+            % that is part of the region
             for i = 1:num_regions
-                region = index_map(i);
-                geometries_in_region = region_table(region, :) == 1;
-                mapped_geometries = ismember(geometries, map);
-                region_geometry = geometries(geometries_in_region & ~mapped_geometries);
-                
-                assert(numel(region_geometry) == 1, ...
-                    'Multiple identical geometries detected. Aborting...');
-                map(region) = region_geometry;
+                map(i) = find(region_table(i, :) == 1, 1, 'last');
             end
         end
         
