@@ -40,19 +40,7 @@ classdef pdedomain < handle
             assert(x0 < x1, 'x0 must be smaller than x1');
             assert(y0 < y1, 'y0 must be smaller than y1');
             
-            rect_csg = [
-                3;
-                4;
-                x0;
-                x0;
-                x1;
-                x1;
-                y0;
-                y1;
-                y1;
-                y0;
-                ];
-            
+            rect_csg = obj.rectcsg(x0, y0, x1, y1);            
             obj.add_csg(material, rect_csg);
         end
         
@@ -82,18 +70,7 @@ classdef pdedomain < handle
     
     methods(Static)
         function dom = create_rectangular(default_material, x0, y0, x1, y1)
-            rect_csg = [
-                3;
-                4;
-                x0;
-                x0;
-                x1;
-                x1;
-                y0;
-                y1;
-                y1;
-                y0;
-                ];
+            rect_csg = geometry.pdedomain.rectcsg(x0, y0, x1, y1);
             dom = geometry.pdedomain(default_material, rect_csg);
         end
     end
@@ -117,8 +94,27 @@ classdef pdedomain < handle
                 region = index_map(i);
                 geometries_in_region = region_table(region, :) == 1;
                 mapped_geometries = ismember(geometries, map);
-                map(region) = geometries(geometries_in_region & ~mapped_geometries);
+                region_geometry = geometries(geometries_in_region & ~mapped_geometries);
+                
+                assert(numel(region_geometry) == 1, ...
+                    'Multiple identical geometries detected. Aborting...');
+                map(region) = region_geometry;
             end
+        end
+        
+        function csg = rectcsg(x0, y0, x1, y1)
+            csg = [
+                3;
+                4;
+                x0;
+                x0;
+                x1;
+                x1;
+                y0;
+                y1;
+                y1;
+                y0;
+                ];
         end
     end
 end
