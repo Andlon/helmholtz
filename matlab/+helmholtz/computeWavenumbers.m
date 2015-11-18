@@ -9,13 +9,8 @@ permeability0 = 1.2566370614*10^(-6);
 N = length(materials);
 
 for i = 1:N
-    
-    c = sqrt(1/(materials(i).permeability * materials(i).permittivity*permittivity0*permeability0));
-    
-    %c = 3*10^8;
-    
+    c = 1 / sqrt(materials(i).permeability * materials(i).permittivity*permittivity0*permeability0);
     k = 2*pi*f/c;
-    
     materials(i).wavenumber = k;
 end
 
