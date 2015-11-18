@@ -1,0 +1,27 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[latin1]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\begin{document}
+
+
+\section*{Relation to The Wave Equation}
+As already stated, the Helmholtz equation for the modeling of electromagnetic waves can be derived from the Maxwell's equations in vacuum
+\begin{align*}
+\nabla \times E &= - \frac{\partial H}{\partial t} \\
+\nabla \times H &= \mu_0 \epsilon _0 \frac{\partial E}{\partial t} \\
+\nabla \cdot E &= 0 \\
+\nabla \cdot H &= 0
+\end{align*}
+
+where $E: \Omega \times \mathbb{R}_+ \rightarrow \mathbb{R}^3$ is the electric field and $H: \Omega \times \mathbb{R}_+ \rightarrow \mathbb{R}^3$ is the magnetic field. It can be shown (\cite{Project}) that the equations can be decoupled into the wave equation for each component of the electric and magnetic field,
+\begin{equation}
+\begin{aligned}
+\label{Wave}
+\frac{\partial^2 \phi}{\partial t^2} - c^2 \Delta \phi = 0, 
+\end{aligned}
+\end{equation}
+where $\phi$ is a spatial component for $E$ or $H$. To arrive at the Helmholtz equation we take the Fourier transform of $\phi$. From \cite{Helmholtz-Wave} we have that if $u(x,t) = \psi (x)e^{-i \omega t}$ satisfies (\ref{Wave}), then $\psi (x)$ is a solution to (\ref{Helmholtz}). This means that by numerically solving the Helmholtz equation, we are modeling the amplitude of the wave for one of the spatial components of the two fields $E$ and $H$.
+
+\end{document}

@@ -16,100 +16,15 @@
 \maketitle
 
 
-\section*{Introduction}
-The Helmholtz equation,
-\begin{equation}
-\begin{aligned}
-\label{Helmholtz}
-\Delta \psi + k^2 \psi = g,
-\end{aligned}
-\end{equation}
-is a time-independent form of the wave equations which often arise in physical problems involving the computation of electromagnetic radiation. In the modeling of electromagnetic waves $\psi$ represents the Fourier transform of either the electric field $E$ or the magnetic field $H$. $k$ is called the wavenumber, and from the derivation of the Helmholtz' equation from Maxwell's equations in vacuum it is seen that $k = \frac{2\pi f}{c}$. Here $f$ is the frequency of the electromagnetic waves and $c = \frac{1}{\sqrt{\mu_0 \epsilon_0}}$ is the speed of light, where $\mu_0$ and $\epsilon_0$ are the permeability and permittivity in vacuum.
+\input{introduction}
 
-\section*{The Weak Formulation}
-We consider the following Dirichlet problem:
-\begin{equation}
-\begin{aligned}
-\label{Helmholtz_Dir}
-\Delta \psi + k^2 \psi &= g  \quad \text{in} \, \Omega \\
-\psi &= 0 \quad \text{on} \, \partial \Omega.
-\end{aligned}
-\end{equation}
-To derive a weak formulation the equation is multiplied with a suiting test function $v \in X $ and integrate over the domain $\Omega$. The left hand side gives:
-\begin{align*}
-\int_\Omega \nabla \psi &+ k^2 \psi v \, \mathrm{d} \Omega \\
-&\Downarrow \\
-\int_{\partial \Omega} \frac{\partial \psi}{\partial n} v \, \mathrm{d} \Omega + \int_\Omega & k^2 \psi v - \nabla \psi \nabla v \, \mathrm{d} \Omega.
-\end{align*}
-At this point we can make a choice for the space of $v$. We choose $v$ to lie in the following space:
-\begin{align*}
-X = H^1_0(\Omega) = \left\{ v \in H^1(\Omega) : v = 0 \text{ on }   \partial \Omega \right\},
-\end{align*}
-where
-\begin{align*}
-H^1(\Omega) = \left\{ v: \Omega \rightarrow \mathbb{R}: v \in L^2(\Omega), v' \in L^2(\Omega) \right\}.
-\end{align*}
-Since $v$ disappears on the boundary we are left with the following expression:
-\begin{align*}
-\int_\Omega & k^2 \psi v - \nabla \psi \nabla v \, \mathrm{d} \Omega = \int_\Omega gv \, \mathrm{d} \Omega.
-\end{align*}
-Let now $a(u,v)$ and $F(v)$ be defined as the following functionals:
-\begin{align*}
-a(u,v) &= \int_\Omega  \nabla u \nabla v - k^2 u v  \, \mathrm{d} \Omega  \quad \text{and} \\
-F(v) &= - \int_\Omega gv \, \mathrm{d} \Omega.
-\end{align*}
-This implies that $a(u,v) = F(v)$. The following problem is called the weak formulation of (\ref{Helmholtz_Dir}):
-\begin{equation}
-\begin{aligned}
-\label{Helmholtz_weak}
-\text{find} \, u \in H^1_0(\Omega): \quad a(u,v) = F(v) \quad \forall \, v \in H^1_0(\Omega).
-\end{aligned}
-\end{equation}
-The functional $a(u,v)$ is continuous. This is seen by the following:
-\begin{align*}
-|a(u,v)| &= |\int_\Omega  \nabla u \nabla v - k^2 u v \, \mathrm{d} \Omega| \\
- 		& \leq |\int_\Omega \nabla u \nabla v \, \mathrm{d} \Omega| + k^2 |\int_\Omega u v \, \mathrm{d} \Omega| \\
- 		& \leq \vectornorm{\nabla u}_{L^2(\Omega)} \vectornorm{\nabla v}_{L^2(\Omega)} + k^2 \vectornorm{u}_{L^2(\Omega)} \vectornorm{v}_{L^2(\Omega)} \\
- 		& \leq C \vectornorm{u}_{L^2(\Omega)} \vectornorm{v}_{L^2(\Omega)} + k^2 \vectornorm{u}_{L^2(\Omega)} \vectornorm{v}_{L^2(\Omega)} \\
- 		& \leq C \vectornorm{u}_{H^1(\Omega)} \vectornorm{v}_{H^1(\Omega)} + k^2 \vectornorm{u}_{H^1(\Omega)} \vectornorm{v}_{H^1(\Omega)} \\
- 		& = M \vectornorm{u}_{H^1(\Omega)} \vectornorm{v}_{H^1(\Omega)}.
-\end{align*}
-The functional $a(u,v)$ is also coercive under certain conditions, since
-\begin{align*}
-a(u,u) &= \int_\Omega  \nabla u \nabla u - k^2 u u \, \mathrm{d} \Omega \\
- 		& = \int_\Omega  |\nabla u|^2 \, \mathrm{d} \Omega - \int_{\Omega} k^2 |u|^2 \, \mathrm{d} \Omega \\
- 		& =  \vectornorm{\nabla u}_{L^2(\Omega)}^2 - k^2 \vectornorm{u}_{L^2(\Omega)}^2\\
- 		& = \vectornorm{u}_{H^1(\Omega)}^2 - \vectornorm{u}_{L^2(\Omega)}^2 - k^2 \vectornorm{u}_{L^2(\Omega)}^2\\
- 		& = \vectornorm{u}_{H^1(\Omega)}^2 - C \vectornorm{u}_{L^2(\Omega)}^2\\
- 		& \geq \vectornorm{u}_{H^1(\Omega)}^2 - C \vectornorm{u}_{H^1(\Omega)}^2\\
- 		& = \alpha \vectornorm{u}_{H^1(\Omega)}^2
-\end{align*}
-Lastly the functional is bilinear, since it is linear in each component. The bilinear functional $F(v)$ is continuous:
-\begin{align*}
-|F(v)| &= |\int_\Omega gv \, \mathrm{d} \Omega| \leq \vectornorm{g}_{L^2(\Omega)} \vectornorm{v}_{L^2(\Omega)} \\
-       &= M \vectornorm{v}_{L^2(\Omega)},
-\end{align*}
-and from the Lax-Milgram theorem there exists a unique solution to (\ref{Helmholtz_weak}).
+\input{the_weak_formulation}
 
-\section*{Relation to The Wave Equation}
-As already stated, the Helmholtz equation for the modeling of electromagnetic waves can be derived from the Maxwell's equations in vacuum
-\begin{align*}
-\nabla \times E &= - \frac{\partial H}{\partial t} \\
-\nabla \times H &= \mu_0 \epsilon _0 \frac{\partial E}{\partial t} \\
-\nabla \cdot E &= 0 \\
-\nabla \cdot H &= 0
-\end{align*}
+\input{relation_wave_equation}
 
-where $E: \Omega \times \mathbb{R}_+ \rightarrow \mathbb{R}^3$ is the electric field and $H: \Omega \times \mathbb{R}_+ \rightarrow \mathbb{R}^3$ is the magnetic field. It can be shown (\cite{Project}) that the equations can be decoupled into the wave equation for each component of the electric and magnetic field,
-\begin{equation}
-\begin{aligned}
-\label{Wave}
-\frac{\partial^2 \phi}{\partial t^2} - c^2 \Delta \phi = 0, 
-\end{aligned}
-\end{equation}
-where $\phi$ is a spatial component for $E$ or $H$. To arrive at the Helmholtz equation we take the Fourier transform of $\phi$. From \cite{Helmholtz-Wave} we have that if $u(x,t) = \psi (x)e^{-i \omega t}$ satisfies (\ref{Wave}), then $\psi (x)$ is a solution to (\ref{Helmholtz}). This means that by numerically solving the Helmholtz equation, we are modeling the amplitude of the wave for one of the spatial components of the two fields $E$ and $H$.
+\input{mesh_generation}
 
-
+\input{spatially_varying_wave_number}
 \section*{Implementation of Helmholtz equation using FEM}
 
 
@@ -125,8 +40,7 @@ One source in the middle of a unit box
 
 \section*{Looking at increasing $\omega$ and mesh size}
 
-\section*{Introducing Spatially Varying Wave Number}
-By introducing different materials in our domain we are able to model a more realistic scenario.  assigning permeability $\mu$ and permittivity $\epsilon$ to  
+
 
 \section*{Attenuation Of The Signal}
 
@@ -135,7 +49,7 @@ By introducing different materials in our domain we are able to model a more rea
 
 
 
-\include{robin_boundary}
+\input{robin_boundary}
 
 
 \begin{thebibliography}{}
