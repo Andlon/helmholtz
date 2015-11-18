@@ -31,19 +31,20 @@ Inserting \eqref{eq:robinType} into \eqref{eq:robinIntParts} we get our weak sol
 
 When we insert for $\psi$ and move the sum outside, we get
 \begin{align}\label{eq:robinMatrixForm}
-\sum_{j=1}^n u_h^j \underbrace{\left( \int_{\partial \Omega} ik\phi_j \phi_i \, d\gamma - \int_\Omega \nabla \phi_j \nabla \phi_i \, d\Omega + \int_\Omega k^2 \phi_j \phi_i \, d\Omega \right)} _\text{$A_{ij}$} = \underbrace{\int_{\Omega} g\phi_i \, d\Omega} _\text{$b_i$}.
+\sum_{j=1}^n u_h^j \underbrace{\left( \int_{\partial \Omega} ik\phi_j \phi_i \, d\gamma - \int_\Omega \nabla \phi_j \nabla \phi_i \, d\Omega + \int_\Omega k^2 \phi_j \phi_i \, d\Omega \right)} _\text{$\tilde{{A_{ij}}}$} = \underbrace{\int_{\Omega} g\phi_i \, d\Omega} _\text{$b_i$}.
 \end{align}
 
 We get $n$ equations by choosing $v$ to be the basis functions, i.e. $\phi_i$ for $i = 1, \dots, n$. Then \eqref{eq:robinMatrixForm} is equivalent to $A u_h = b$, and we can solve for $u_h$.
 
 Given $M$ edges on the boundary $\partial \Omega$, we can name the edges $e_1, \dots, e_M$. 
 
-Looking only at the boundary term in \eqref{eq:robinMatrixForm} we can write it as
+By fixing $i$ and $j$ and looking at the boundary term in $\tilde{A_{ij}}$ the value for the term will be
 \begin{align}
-\int_{\partial \Omega} ik(x)\phi_j \phi_i \, d\gamma = \sum_{k=1}^M \int_{e_k} ik(x)\phi_j \phi_i \, d\gamma
+\int_{\partial \Omega} ik(x)\phi_j \phi_i \, d\gamma = \sum_{k=1}^M \int_{e_k} ik(x)\phi_j \phi_i \, d\gamma\\
+= \sum_{e \in \textrm{supp}(\phi_i) \cap \textrm{supp}(\phi_j)} \int_e \phi_j \phi_i \, d\gamma.
 \end{align}
 
-It is important that we are consistent in the direction of movement on the boundary, otherwise we might get sign errors.
+
 
 
 
