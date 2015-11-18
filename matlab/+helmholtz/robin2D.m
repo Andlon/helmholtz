@@ -35,16 +35,16 @@ for j = 1:N
     assert(sum(edgelist(:, 1) == p1_index) == 1);
     assert(sum(edgelist(:, 2) == p2_index) == 1);
     
-    phi_1 = @(x) C(1, 1) * x(1) + C(2, 1) * x(2) + C(3, 1);
-    phi_2 = @(x) C(1, 2) * x(1) + C(2, 2) * x(2) + C(3, 2);
-    f = @(x) 1i * k * phi_1(x) * phi_2(x);
-    g = @(x) 1i * k * phi_1(x) * phi_1(x);
-    h = @(x) 1i * k * phi_2(x) * phi_2(x);
+    phi_1 = @(x) C(1, 1) * x(:, 1) + C(2, 1) * x(:, 2) + C(3, 1);
+    phi_2 = @(x) C(1, 2) * x(:, 1) + C(2, 2) * x(:, 2) + C(3, 2);
+    f = @(x) 1i * k * phi_1(x) .* phi_2(x);
+    g = @(x) 1i * k * phi_1(x) .* phi_1(x);
+    h = @(x) 1i * k * phi_2(x) .* phi_2(x);
    
-    A(p1_index, p2_index) = A(p1_index, p2_index) - integration.quadLine2D(p1, p2, 1, f);
-    A(p2_index, p1_index) = A(p2_index, p1_index) - integration.quadLine2D(p1, p2, 1, f);
-    A(p1_index, p1_index) = A(p1_index, p1_index) - integration.quadLine2D(p1, p2, 1, g);
-    A(p2_index, p2_index) = A(p2_index, p2_index) - integration.quadLine2D(p1, p2, 1, h);
+    A(p1_index, p2_index) = A(p1_index, p2_index) - integration.quadLine2D(p1, p2, 2, f);
+    A(p2_index, p1_index) = A(p2_index, p1_index) - integration.quadLine2D(p1, p2, 2, f);
+    A(p1_index, p1_index) = A(p1_index, p1_index) - integration.quadLine2D(p1, p2, 2, g);
+    A(p2_index, p2_index) = A(p2_index, p2_index) - integration.quadLine2D(p1, p2, 2, h);
     
 end
 

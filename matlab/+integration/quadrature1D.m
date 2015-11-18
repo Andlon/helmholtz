@@ -50,6 +50,9 @@ switch Nq
     otherwise
         error('Nq must be an integer in the interval [1, 4].');
 end
+
+x_q = x_q';
+w_q = w_q';
 end
 
 function [ Y ] = plusminus(X)
