@@ -5,6 +5,7 @@
 \usepackage{amssymb}
 \usepackage{mathtools}
 \usepackage{bm}
+\usepackage{standalone}
 % Use \bm{x} for vectors/matrices in bold AND italic
 
 \newcommand{\vectornorm}[1]{\left\|#1\right\|}
@@ -77,6 +78,35 @@ a(u,u) &= \int_\Omega  \nabla u \nabla u - k^2 u u \, \mathrm{d} \Omega \\
  		& =  \vectornorm{\nabla u}_{L^2(\Omega)}^2 - k^2 \vectornorm{u}_{L^2(\Omega)}^2\\
  		& \geq C\vectornorm{u}_{L^2(\Omega)}^2  - k^2 \vectornorm{u}_{L^2(\Omega)}^2\\
 \end{align*}
+
+\section*{Implementation of Helmholtz equation using FEM}
+
+
+\section*{Mesh Generation}
+Andreas needs to write about this!!!!!!!!!!!!
+
+\section*{Unit box, Dirichlet, 1 point source}
+One source in the middle of a unit box
+
+
+\section*{Unit box, Dirichlet/Robin, several point sources }
+
+
+\section*{Looking at increasing $\omega$ and mesh size}
+
+\section*{Introducing Spatially Varying Wave Number}
+By introducing different materials in our domain we are able to model a more realistic scenario.  assigning permeability $\mu$ and permittivity $\epsilon$ to  
+
+\section*{Attenuation Of The Signal}
+
+
+\section*{Final result: Modeling A House, varying materials, 1 or several point sources }
+
+
+
+\include{robin_boundary}
+
+
 \begin{thebibliography}{}
 
 \bibitem{Quarteroni}

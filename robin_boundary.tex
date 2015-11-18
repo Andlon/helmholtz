@@ -1,0 +1,50 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[latin1]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\begin{document}
+
+
+\section*{Robin-Type Boundary Conditions}
+If we instead of the Dirichlet boundary conditions take a look at a Robin-type boundary condition, given by
+\begin{align}\label{eq:robinType}
+\frac{\partial \psi}{\partial n} - ik\psi = 0,
+\end{align}
+the idea is that we will obtain a solution that ensures that all waves will leave $\Omega$ and none will enter $\Omega$.
+
+Starting with the Helmholtz equation, we multiply by a test function $v$ and integrate over the domain $\Omega$. 
+
+\begin{align}
+\int_\Omega \Delta \psi v \, d\Omega + \int_\Omega k^2 \psi v \, d\Omega = \int_\Omega gv \, d\Omega
+\end{align}
+
+Doing integration by parts on the first term leads to
+\begin{align}\label{eq:robinIntParts}
+\int_{\partial \Omega} \frac{\partial \psi}{\partial n} v \, d\gamma - \int_\Omega \nabla \psi \nabla v \, d\Omega + \int_\Omega k^2 \psi v \, d\Omega = \int_\Omega gv \, d\Omega
+\end{align}
+
+Inserting \eqref{eq:robinType} into \eqref{eq:robinIntParts} we get our weak solution
+\begin{align}\label{eq:robinWeakSol}
+\underbrace{\int_{\partial \Omega} ik\psi v \, d\gamma - \int_\Omega \nabla \psi \nabla v \, d\Omega + \int_\Omega k^2 \psi v \, d\Omega} _\text{$a(\psi, v)$} = \underbrace{\int_\Omega gv \, d\Omega} _\text{F(v)}
+\end{align}
+
+When we insert for $\psi$ and move the sum outside, we get
+\begin{align}\label{eq:robinMatrixForm}
+\sum_{j=1}^n u_h^j \underbrace{\left( \int_{\partial \Omega} ik\phi_j \phi_i \, d\gamma - \int_\Omega \nabla \phi_j \nabla \phi_i \, d\Omega + \int_\Omega k^2 \phi_j \phi_i \, d\Omega \right)} _\text{$A_{ij}$} = \underbrace{\int_{\Omega} g\phi_i \, d\Omega} _\text{$b_i$}.
+\end{align}
+
+We get $n$ equations by choosing $v$ to be the basis functions, i.e. $\phi_i$ for $i = 1, \dots, n$. Then \eqref{eq:robinMatrixForm} is equivalent to $A u_h = b$, and we can solve for $u_h$.
+
+Given $M$ edges on the boundary $\partial \Omega$, we can name the edges $e_1, \dots, e_M$. 
+
+Looking only at the boundary term in \eqref{eq:robinMatrixForm} we can write it as
+\begin{align}
+\int_{\partial \Omega} ik(x)\phi_j \phi_i \, d\gamma = \sum_{k=1}^M \int_{e_k} ik(x)\phi_j \phi_i \, d\gamma
+\end{align}
+
+It is important that we are consistent in the direction of movement on the boundary, otherwise we might get sign errors.
+
+
+
+\end{document}
