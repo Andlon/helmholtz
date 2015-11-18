@@ -10,9 +10,9 @@ N = length(materials);
 
 for i = 1:N
     
-    %c = sqrt(materials(i).permeability * materials(i).permittivity/(permittivity0*permeability0));
+    c = sqrt(1/(materials(i).permeability * materials(i).permittivity*permittivity0*permeability0));
     
-    c = 3*10^8;
+    %c = 3*10^8;
     
     k = 2*pi*f/c;
     
