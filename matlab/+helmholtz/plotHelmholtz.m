@@ -17,6 +17,9 @@ if strcmp(type,'real')
     ylabel('y')
     xlabel('x')
     view(dim)
+    if dim == 2
+        colorbar
+    end
 elseif strcmp(type,'imag')
     figure
     trimesh(triangles,vertices(:,1),vertices(:,2),imag(data.u))
@@ -24,6 +27,9 @@ elseif strcmp(type,'imag')
     ylabel('y')
     xlabel('x')
     view(dim)
+    if dim == 2
+        colorbar
+    end
 else
     figure
     trimesh(triangles,vertices(:,1),vertices(:,2),abs(data.u))
@@ -31,6 +37,9 @@ else
     ylabel('y')
     xlabel('x')
     view(dim)
+    if dim == 2
+        colorbar
+    end
 end
 
 end

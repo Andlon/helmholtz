@@ -17,8 +17,7 @@ g0 = -1;
 
 source_index = nearestNeighbor(data.tri,[0,0]);
 
-
 [A, b] = helmholtz.stiffness2D(data.tri,M, g0, source_index);
 data.u = helmholtz.dirichlet2D(A, b, edgelist);
-
+%data.u = helmholtz.robin2D(A,b,data.tri,M);
 end
