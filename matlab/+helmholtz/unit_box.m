@@ -12,7 +12,7 @@ k = omega/c;
 
 M = helmholtz.generateMaterials(k,length(triangles));
 
-g0 = -1-1i;
+g0 = -1;
 
 
 source_index = nearestNeighbor(data.tri,[0,0]);
