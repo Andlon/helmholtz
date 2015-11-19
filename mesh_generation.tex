@@ -24,7 +24,7 @@ Figure \ref{fig:basic_rect_mesh} illustrates a first attempt at a basic meshing 
   \item Generate meshes with the minimum number of elements to adequately capture the geometry.
 \end{itemize}
 
-The last point is not of crucial importance for our work, but in many cases it is desirable to only generate triangles where needed, and instead take advantage of adaptive mesh refinement to constraint dense regions of mesh elements to parts of the domain where they are needed.
+The last point is not of crucial importance for our work, but in many cases it is desirable to only generate triangles where needed, and instead take advantage of adaptive mesh refinement to constrain dense regions of mesh elements to parts of the domain where they are needed.
 
 The Swiss army knife of mesh generation is the Delaunay triangulation. Given a set of points, it generates a triangulation of the convex hull of the points, with the property that no points are contained inside the circumcircle of any triangle. Note that for the purposes of this project, we are only concerned with 2D meshes. A useful extension is the Constrained Delaunay Triangulation, which is similar to Delaunay triangulation, but imposes constraints on which vertices in the triangulation must be connected by edges. A constrained Delaunay triangulation does not in general have the Delaunay property.
 
@@ -62,7 +62,16 @@ In \cite{ruppert}, Ruppert proves that given certain bounds on the angles of the
 
 For practical purposes, such bounds on the input are not realistic, and so practical implementations must guarantee termination in the face of badly shaped input data. Some practical algorithms for deciding when to terminate are found in \cite{shewchuk}. A more recent and arguably better approach was introduced by Miller-Pav-Walkington in \cite{miller}.
 
+\subsection*{Mesh generation implementation}
+\subsubsection*{Ruppert's from scratch}
+We implemented a version of Ruppert's algorithm in MATLAB using MATLAB's builtin Delaunay triangulation methods. In particular, MATLAB offers us a black box procedure for iterative Delaunay triangulation, so while it is convenient for on-the-fly inserting points as we are iterating, it does not give us any information about which triangles have changed after each change, so we must scan the entire set of triangles to determine what changed upon every iteration. This results in a rather disastrous time-complexity for our implementation.
+Hence, while our implementation generates nice meshes for relatively small triangulations, and is capable of handling relatively general geometries (assuming angles are not too sharp), it simply does not terminate in reasonable time for finer meshes. Due to time and space constraints, we've omitted runtime and complexity evaluations of our implementation. 
 
+Since the only way to remedy this is to implement the incremental Delaunay algorithm from scratch, we decided to instead look for existing stable, mature and faster mesh refinement implementations.
 
+\subsubsection*{MATLAB PDE Toolbox}
+The MATLAB PDE Toolbox contains a set of functions which are able to generate and refine meshes for almost arbitrary geometries. It is however rather inconvenient to use from the command-line, so we wrapped its functionality in a simple to use interface, allowing us to easily build relatively complicated geometries with different materials.
+
+Although the meshing algorithm is much faster than our own custom implementation, it evidently still suffers from a relatively high time-complexity, as we were still unable to generate meshes of the desired resolution. Hence in practice we sometimes lowered the frequency of the modelled signal.
 
 \end{document}
