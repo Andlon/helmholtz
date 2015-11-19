@@ -6,10 +6,14 @@ distinct_colors = parula(num_distinct_values);
 colors = distribute_colors(values, distinct_colors);
 
 figure;
-for t = 1:size(tri, 1)
-    vertices = tri.Points(tri.ConnectivityList(t, :), :);
-    patch(vertices(:, 1), vertices(:, 2), colors(t, :));
-end
+T = size(tri, 1);
+vertex_indices = reshape(tri.ConnectivityList', numel(tri.ConnectivityList), 1);
+vertices = tri.Points(vertex_indices, :);
+X = reshape(vertices(:, 1), 3, T);
+Y = reshape(vertices(:, 2), 3, T);
+
+face_colors = reshape(colors, 1, size(colors, 1), 3);
+patch(X, Y, face_colors);
 
 end
 
