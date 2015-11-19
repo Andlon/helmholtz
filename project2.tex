@@ -3,11 +3,13 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage{amsthm}
 \usepackage{mathtools}
 \usepackage{bm}
 \usepackage{standalone}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{gensymb}
 % Use \bm{x} for vectors/matrices in bold AND italic
 
 \newcommand{\vectornorm}[1]{\left\|#1\right\|}
@@ -16,6 +18,14 @@
 \title{Programming project in TMA4220 \\ Part 2B \\ Helmholtz' equation for electromagnetic waves}
 \author{Anders Maximilian Opskar Voldsund \\ Andreas Sebastian Borgen Longva \\ Espen August Johansen Velsvik}
 \maketitle
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{algorithm}{Algorithm}
 
 
 \input{introduction}
