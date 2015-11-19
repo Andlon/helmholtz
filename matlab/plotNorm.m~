@@ -1,0 +1,10 @@
+function [] = plotNorm(norm,N)
+figure
+hold on
+plot(N,norm,'*')
+plot(N,norm,'color','blue','--')
+title('Norm of solutions')
+xlabel('N')
+ylabel('Norm')
+end
+
