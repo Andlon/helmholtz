@@ -14,9 +14,9 @@ We consider the following Dirichlet problem:
 \psi &= 0 \quad \text{on} \, \partial \Omega.
 \end{aligned}
 \end{equation}
-To derive a weak formulation the equation is multiplied with a suiting test function $v \in X $ and integrate over the domain $\Omega$. The left hand side gives:
+To derive a weak formulation the equation is multiplied with a suiting test function $v \in X $ and integrated over the domain $\Omega$. The left hand side gives:
 \begin{align*}
-\int_\Omega \nabla \psi &+ k^2 \psi v \, \mathrm{d} \Omega \\
+\int_\Omega \nabla \psi v &+ k^2 \psi v \, \mathrm{d} \Omega \\
 &\Downarrow \\
 \int_{\partial \Omega} \frac{\partial \psi}{\partial n} v \, \mathrm{d} \Omega + \int_\Omega & k^2 \psi v - \nabla \psi \nabla v \, \mathrm{d} \Omega.
 \end{align*}
