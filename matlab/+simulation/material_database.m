@@ -2,7 +2,7 @@ classdef material_database
     properties(SetAccess = private)
         air = struct('permeability', 1, 'permittivity', 1);
         vacuum = struct('permeability',1,'permittivity',1);
-        water = struct('permeability',0.999992,'permittivity', 80 + 0.157 * 80i);
+        water = struct('permeability',0.999992,'permittivity', 80 - 0.157 * 80i);
         sapphire = struct('permeability',0.99999976,'permittivity', 10);
         teflon = struct('permeability',1, 'permittivity', 2.1 - 2.1i);
         
