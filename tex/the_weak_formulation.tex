@@ -44,30 +44,35 @@ This implies that $a(u,v) = F(v)$. The following problem is called the weak form
 \text{find} \, u \in H^1_0(\Omega): \quad a(u,v) = F(v) \quad \forall \, v \in H^1_0(\Omega).
 \end{aligned}
 \end{equation}
-The functional $a(u,v)$ is continuous. This is seen by the following:
+The functional $a(u,v)$ is continuous. This is seen by the following, where we have used the Poincaré inequality $\vectornorm{u}_{L^2} \leq C |u|_{H^1}$ for positive $C$, with the latter denoting the seminorm.
 \begin{align*}
 |a(u,v)| &= |\int_\Omega  \nabla u \nabla v - k^2 u v \, \mathrm{d} \Omega| \\
  		& \leq |\int_\Omega \nabla u \nabla v \, \mathrm{d} \Omega| + k^2 |\int_\Omega u v \, \mathrm{d} \Omega| \\
- 		& \leq \vectornorm{\nabla u}_{L^2(\Omega)} \vectornorm{\nabla v}_{L^2(\Omega)} + k^2 \vectornorm{u}_{L^2(\Omega)} \vectornorm{v}_{L^2(\Omega)} \\
- 		& \leq C \vectornorm{u}_{L^2(\Omega)} \vectornorm{v}_{L^2(\Omega)} + k^2 \vectornorm{u}_{L^2(\Omega)} \vectornorm{v}_{L^2(\Omega)} \\
- 		& \leq C \vectornorm{u}_{H^1(\Omega)} \vectornorm{v}_{H^1(\Omega)} + k^2 \vectornorm{u}_{H^1(\Omega)} \vectornorm{v}_{H^1(\Omega)} \\
- 		& = M \vectornorm{u}_{H^1(\Omega)} \vectornorm{v}_{H^1(\Omega)}.
+ 		\text{Cauchy-Schwarz} \quad & \leq \vectornorm{\nabla u}_{L^2(\Omega)} \vectornorm{\nabla v}_{L^2(\Omega)} + k^2 \vectornorm{u}_{L^2(\Omega)} \vectornorm{v}_{L^2(\Omega)} \\
+		& = |u|_{H^1(\Omega)} |v|_{H^1(\Omega)} + k^2 \vectornorm{u}_{L^2(\Omega)} \vectornorm{v}_{L^2(\Omega)} \\
+		\text{Poincaré} \quad & \leq |u|_{H^1(\Omega)} |v|_{H^1(\Omega)} + k^2 C_1 |{u}|_{H^1(\Omega)} |{v}|_{H^1(\Omega)} \\
+		& = (1 + C_1 k^2) |u|_{H^1(\Omega)} |v|_{H^1(\Omega)} \\
+		& \leq (1 + C_1 k^2) C_2 \vectornorm{u}_{H^1(\Omega)} \vectornorm{v}_{H^1(\Omega)} \\
+		&= M \vectornorm{u}_{H^1(\Omega)} \vectornorm{v}_{H^1(\Omega)},
 \end{align*}
+
+where we have used the equivalence of the $H^1$ norm and semi-norm (property 2.5 in Quarteroni \cite{Quarteroni}).
 The functional $a(u,v)$ is also coercive under certain conditions, since
 \begin{align*}
 a(u,u) &= \int_\Omega  \nabla u \nabla u - k^2 u u \, \mathrm{d} \Omega \\
  		& = \int_\Omega  |\nabla u|^2 \, \mathrm{d} \Omega - \int_{\Omega} k^2 |u|^2 \, \mathrm{d} \Omega \\
  		& =  \vectornorm{\nabla u}_{L^2(\Omega)}^2 - k^2 \vectornorm{u}_{L^2(\Omega)}^2\\
- 		& = \vectornorm{u}_{H^1(\Omega)}^2 - \vectornorm{u}_{L^2(\Omega)}^2 - k^2 \vectornorm{u}_{L^2(\Omega)}^2\\
- 		& = \vectornorm{u}_{H^1(\Omega)}^2 - C \vectornorm{u}_{L^2(\Omega)}^2\\
- 		& \geq \vectornorm{u}_{H^1(\Omega)}^2 - C \vectornorm{u}_{H^1(\Omega)}^2\\
- 		& = \alpha \vectornorm{u}_{H^1(\Omega)}^2
+\text{Poincaré} \quad & \geq |u|^2_{H^1(\Omega)} - k^2 C_p^2 |u|^2_{H^1(\Omega)} \\
+		& = (1 - k^2 C_p^2) |u|^2_{H^1(\Omega)} \\
+		& \geq (1 - k^2 C_p^2) C \vectornorm{u}^2_{H^1(\Omega)} \\
+		& = \alpha \vectornorm{u}^2_{H^1(\Omega)}.
 \end{align*}
-Lastly the functional is bilinear, since it is linear in each component. The bilinear functional $F(v)$ is continuous:
+
+Here we have once again used the equivalence of the norm and semi-norm. Lastly the functional is bilinear, since it is linear in each component. The bilinear functional $F(v)$ is continuous:
 \begin{align*}
 |F(v)| &= |\int_\Omega gv \, \mathrm{d} \Omega| \leq \vectornorm{g}_{L^2(\Omega)} \vectornorm{v}_{L^2(\Omega)} \\
        &= M \vectornorm{v}_{L^2(\Omega)},
 \end{align*}
-and from the Lax-Milgram theorem there exists a unique solution to (\ref{Helmholtz_weak}).
+and from the Lax-Milgram theorem there exists a unique solution to (\ref{Helmholtz_weak}) when $k^2 \leq \frac{1}{C_p^2}$ where $C_p$ is a Poincaré constant.
 
 \end{document}
