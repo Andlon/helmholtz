@@ -76,6 +76,10 @@ classdef domain < handle
             
             M = geometry.assign_materials(tri, obj.polygons, ...
                 obj.materials, obj.default_material);
+            
+            % "Normalize" the triangulation so that nearestNeighbor
+            % queries may be performed on it
+            tri = triangulation(tri.ConnectivityList, tri.Points);
         end
     end
 end

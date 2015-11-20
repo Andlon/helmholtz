@@ -19,6 +19,9 @@ y_spec = linspace(ymin, ymax, Ny);
 x = reshape(X, Nx^2, 1);
 y = reshape(Y, Ny^2, 1);
 tri = delaunayTriangulation(x, y);
+
+% Make the triangulation on-Delaunay so that nearestNeighbor can be invoked
+tri = triangulation(tri.ConnectivityList, tri.Points);
 end
 
 function assert_scalars(scalars, names)

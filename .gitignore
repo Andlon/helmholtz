@@ -28,9 +28,9 @@
 *.synctex.gz
 
 # Project specific ignores
-project2.pdf
-mesh_generation.pdf
-project2.ps
-helmholtz_for_house.pdf
-bibliography.pdf
-figures/*converted-to.pdf
+tex/project2.pdf
+tex/mesh_generation.pdf
+tex/project2.ps
+tex/helmholtz_for_house.pdf
+tex/bibliography.pdf
+tex/figures/*converted-to.pdf
