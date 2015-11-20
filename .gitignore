@@ -1,3 +1,8 @@
+# Autosave and backup files
+*.orig
+*~
+
+# LaTeX-generated files
 *.aux
 *.glo
 *.idx
@@ -24,3 +29,8 @@
 
 # Project specific ignores
 project2.pdf
+mesh_generation.pdf
+project2.ps
+helmholtz_for_house.pdf
+bibliography.pdf
+figures/*converted-to.pdf
